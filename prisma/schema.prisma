@@ -1,0 +1,118 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// --- Stage 1: Auth & Hub ---
+
+model User {
+  id          String               @id @default(cuid())
+  email       String               @unique
+  password    String
+  name        String
+  createdAt   DateTime             @default(now())
+  projects    Project[]
+  resetTokens PasswordResetToken[]
+}
+
+// --- Password reset ---
+
+// tokenHash stores a SHA-256 hash of the raw token that gets emailed to the
+// user, so a database leak alone can't be used to take over an account.
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+// Project is the top-level container that later stages (kanban, dashboard,
+// checklist) attach their own data to. Only the fields needed for the
+// Stage 1 hub screen are defined for now; later stages will extend this
+// model with relations (agendas, categories, etc.) via new migrations.
+model Project {
+  id             String   @id @default(cuid())
+  title          String
+  // draft -> project created but meeting minutes not analyzed yet (Stage 2)
+  // kanban -> agenda review in progress (Stage 2-3)
+  // dashboard -> category/team assignment in progress (Stage 4-5)
+  // done -> all checklist items complete
+  status         String   @default("draft")
+  meetingMinutes String?
+  ownerId        String
+  owner          User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  agendas        Agenda[]
+  members        Member[]
+  categories     Category[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+// --- Stage 2-3: Agenda Kanban ---
+
+// One agenda card extracted by AI from the meeting minutes. `issues` is a
+// JSON-encoded string[] (SQLite has no native array type).
+model Agenda {
+  id              String   @id @default(cuid())
+  projectId       String
+  project         Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  order           Int
+  title           String
+  originalSummary String
+  currentSummary  String
+  aiSuggestion    String
+  issues          String
+  // pending -> 진행 대기, reviewing -> 리뷰 중, done -> 완료
+  status          String   @default("pending")
+  // direct_edit | ai_applied | original_kept, set once resolved
+  resolution      String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+// --- Stage 4-5: Category dashboard & checklist ---
+
+model Member {
+  id         String     @id @default(cuid())
+  projectId  String
+  project    Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  name       String
+  createdAt  DateTime   @default(now())
+  categories Category[] @relation("CategoryMembers")
+  tasks      Task[]
+}
+
+// AI-extracted role/work grouping (e.g. FE, BE, 디자인, 마케팅). Team members
+// are assigned per category, and AI breaks each member's work within the
+// category into a Task checklist once at least one member is assigned.
+model Category {
+  id        String   @id @default(cuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  name      String
+  order     Int
+  members   Member[] @relation("CategoryMembers")
+  tasks     Task[]
+  createdAt DateTime @default(now())
+}
+
+model Task {
+  id         String   @id @default(cuid())
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  memberId   String
+  member     Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  text       String
+  completed  Boolean  @default(false)
+  order      Int
+  createdAt  DateTime @default(now())
+}
