@@ -30,7 +30,7 @@ export async function requestPasswordResetAction(
   const token = randomBytes(32).toString("hex");
   const tokenHash = createHash("sha256").update(token).digest("hex");
 
-  await prisma.passwordResetToken.create({
+  const created = await prisma.passwordResetToken.create({
     data: {
       userId: user.id,
       tokenHash,
@@ -47,8 +47,14 @@ export async function requestPasswordResetAction(
     // Swallow send failures instead of surfacing them: an error here would
     // only ever happen for a registered email, which defeats the whole
     // point of always returning `sent: true` above. The actual failure is
-    // still logged server-side (see sendPasswordResetEmail).
+    // still logged server-side (see sendPasswordResetEmail), and recorded
+    // on the token row itself (sendError) since streamed CLI logs have
+    // proven unreliable to inspect after the fact.
     console.error("[password reset] failed to send email:", error);
+    await prisma.passwordResetToken.update({
+      where: { id: created.id },
+      data: { sendError: error instanceof Error ? error.message : String(error) },
+    });
   }
 
   return { sent: true };

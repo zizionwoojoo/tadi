@@ -108,7 +108,11 @@
       "Bash(curl -s https://td0rxq27lkjphmjabhj2rcan.nrt.prisma.build/forgot-password -o /tmp/fp-page.html)",
       "Bash(grep -o '\\\\$ACTION_REF_1[^/]*' /tmp/fp-page.html)",
       "Bash(grep -o '\"\\\\$ACTION_1:0\"[^}]*}' /tmp/fp-page.html)",
-      "Bash(curl -s -i -X POST -F '$ACTION_REF_1=' -F '$ACTION_1:0={\"id\":\"602fd447bd31c8432d2aab948f154d6ef48830da15\",\"bound\":\"$@1\"}' -F '$ACTION_1:1=[\"$undefined\"]' -F ACTION_KEY=k99dd56aa2e769bacd4768c4663246abd -F email=pwj090325@gmail.com https://td0rxq27lkjphmjabhj2rcan.nrt.prisma.build/forgot-password)"
+      "Bash(curl -s -i -X POST -F '$ACTION_REF_1=' -F '$ACTION_1:0={\"id\":\"602fd447bd31c8432d2aab948f154d6ef48830da15\",\"bound\":\"$@1\"}' -F '$ACTION_1:1=[\"$undefined\"]' -F ACTION_KEY=k99dd56aa2e769bacd4768c4663246abd -F email=pwj090325@gmail.com https://td0rxq27lkjphmjabhj2rcan.nrt.prisma.build/forgot-password)",
+      "Bash(git push *)",
+      "Bash(git ls-remote *)",
+      "Bash(kill %1)",
+      "Bash(python3 -c ' *)"
     ]
   }
 }

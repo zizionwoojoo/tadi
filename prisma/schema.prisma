@@ -33,6 +33,8 @@ model PasswordResetToken {
   tokenHash String   @unique
   expiresAt DateTime
   createdAt DateTime @default(now())
+  // Diagnostic only: records why the reset email send failed, if it did.
+  sendError String?
 }
 
 // Project is the top-level container that later stages (kanban, dashboard,
