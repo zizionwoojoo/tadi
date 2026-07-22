@@ -89,7 +89,26 @@
       "Bash(grep -nE \"gsk_[A-Za-z0-9]|re_[A-Za-z0-9_]{8,}|postgres://[^ ]*:[^ ]*@|sk_[A-Za-z0-9_-]{10,}\" prisma/migrations/20260722180823_init/migration.sql)",
       "Bash(grep -nE \"gsk_[A-Za-z0-9]|re_[A-Za-z0-9_]{8,}|postgres://[^ ]*:[^ ]*@|sk_[A-Za-z0-9_-]{10,}\" .agents/skills/prisma-postgres-setup/references/endpoints.md)",
       "Bash(git check-ignore *)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git config *)",
+      "Bash(git commit -m ' *)",
+      "Bash(command -v gh)",
+      "Bash(gh auth *)",
+      "Bash(jobs)",
+      "Bash(gh repo *)",
+      "Bash(curl -s -o /dev/null -w \"live check: %{http_code}\\\\n\" https://td0rxq27lkjphmjabhj2rcan.nrt.prisma.build/login)",
+      "WebFetch(domain:resend.com)",
+      "Bash(bunx @prisma/cli@latest app logs --project proj_cmrwdrrxa3b0l03f754f7tsqq --json --no-interactive)",
+      "Bash(bunx @prisma/cli@latest app logs --help)",
+      "Bash(curl -s https://td0rxq27lkjphmjabhj2rcan.nrt.prisma.build/api/auth/providers)",
+      "Bash(curl -s https://td0rxq27lkjphmjabhj2rcan.nrt.prisma.build/api/auth/session)",
+      "Bash(command -v psql)",
+      "Bash(node -e ' *)",
+      "WebSearch",
+      "Bash(curl -s https://td0rxq27lkjphmjabhj2rcan.nrt.prisma.build/forgot-password -o /tmp/fp-page.html)",
+      "Bash(grep -o '\\\\$ACTION_REF_1[^/]*' /tmp/fp-page.html)",
+      "Bash(grep -o '\"\\\\$ACTION_1:0\"[^}]*}' /tmp/fp-page.html)",
+      "Bash(curl -s -i -X POST -F '$ACTION_REF_1=' -F '$ACTION_1:0={\"id\":\"602fd447bd31c8432d2aab948f154d6ef48830da15\",\"bound\":\"$@1\"}' -F '$ACTION_1:1=[\"$undefined\"]' -F ACTION_KEY=k99dd56aa2e769bacd4768c4663246abd -F email=pwj090325@gmail.com https://td0rxq27lkjphmjabhj2rcan.nrt.prisma.build/forgot-password)"
     ]
   }
 }
